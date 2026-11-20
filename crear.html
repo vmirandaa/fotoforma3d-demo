@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f4ee">
+  <meta name="description" content="Sube fotos de tu mascota, revisa su figura en 3D gratis y pide el tamaño que prefieras.">
+  <title>Crear mi figura | FORMA</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png">
+  <!-- Vista al compartir el enlace (WhatsApp, Instagram, Facebook). Si cambias de dominio, actualiza estas direcciones. -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_CL">
+  <meta property="og:site_name" content="FORMA">
+  <meta property="og:title" content="Crea la figura 3D de tu mascota">
+  <meta property="og:description" content="Sube fotos de tu mascota y revisa su figura en 3D antes de pagar.">
+  <meta property="og:url" content="https://vmirandaa.github.io/fotoforma3d/crear.html">
+  <meta property="og:image" content="https://vmirandaa.github.io/fotoforma3d/assets/images/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="La foto de una mascota y su figura 3D en blanco">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400;1,9..144,500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.4.0/model-viewer.min.js"></script>
+</head>
+<body id="top" class="studio-page">
+  <!-- Aplica el modo oscuro antes de dibujar la página, para que no se vea un destello claro al abrirla (js/main.js lo mantiene después). -->
+  <script>(function () { var saved = null; try { saved = localStorage.getItem('forma-theme'); } catch (e) {} if (saved === 'dark' || (saved !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches)) { document.body.classList.add('theme-dark'); var meta = document.querySelector('meta[name=theme-color]'); if (meta) meta.content = '#171b18'; } })();</script>
+  <div class="topline"><span>FORMA · FIGURAS 3D DE MASCOTAS</span></div>
+  <header class="header">
+    <a class="wordmark" href="index.html" aria-label="FORMA, inicio"><span class="brand-symbol">F</span>FORMA<span class="wordmark-dot">.</span></a>
+    <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false">☰</button>
+    <nav class="nav" aria-label="Principal">
+      <a href="index.html#como-funciona">Cómo funciona</a>
+      <a href="index.html#precios">Tamaños y precios</a>
+      <a href="ingresar.html">Mi pedido</a>
+      <button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false"><span aria-hidden="true">◐</span><span id="theme-label">Modo oscuro</span></button>
+      <a href="index.html" class="nav-cta">Volver al inicio <span>↗</span></a>
+    </nav>
+  </header>
+  <main>
+    <section class="studio-hero">
+      <a class="back-link" href="index.html">← Volver a FORMA</a>
+      <div class="eyebrow"><span class="live-dot"></span> Vista previa gratis</div>
+      <h1>Sus fotos, convertidas<br><em>en su figura.</em></h1>
+      <p>Sube fotos de tu mascota y revisa su figura en 3D. Solo pagas si decides pedirla.</p>
+    </section>
+    <nav class="studio-tabs" role="tablist" aria-label="Pasos para crear la figura">
+      <button class="studio-tab active" id="tab-prepare" type="button" role="tab" aria-selected="true" aria-controls="panel-prepare" tabindex="0"><span>01</span><span><strong>Sus fotos</strong><small>Sube fotos de tu mascota</small></span><b>→</b></button>
+      <button class="studio-tab" id="tab-view" type="button" role="tab" aria-selected="false" aria-controls="panel-view" tabindex="-1"><span>02</span><span><strong>Su figura</strong><small>Revísala y elige el tamaño</small></span><b>↗</b></button>
+    </nav>
+    <section class="studio-workspace" aria-label="Creador de figuras">
+      <div class="studio-tab-panel prepare-panel" id="panel-prepare" role="tabpanel" aria-labelledby="tab-prepare">
+        <form class="studio-form" id="generation-form">
+          <div class="studio-form-heading"><span class="form-count">01</span><div><h2>Sube fotos de tu mascota</h2></div></div>
+          <div class="photo-checklist">
+            <p class="photo-checklist-title">Antes de subirlas, revisa que:</p>
+            <ul>
+              <li><span class="photo-check-mark" aria-hidden="true">✓</span><span><strong>Dos o tres ángulos</strong><small>De frente, de costado y una donde se vea la cola.</small></span></li>
+              <li><span class="photo-check-mark" aria-hidden="true">✓</span><span><strong>Buena luz</strong><small>De día y sin filtros.</small></span></li>
+              <li><span class="photo-check-mark" aria-hidden="true">✓</span><span><strong>Se ve entera</strong><small>De cuerpo completo, ocupando casi todo el cuadro.</small></span></li>
+              <li><span class="photo-check-mark" aria-hidden="true">✓</span><span><strong>A la altura de sus ojos</strong><small>Ni desde arriba ni desde abajo.</small></span></li>
+              <li><span class="photo-check-mark" aria-hidden="true">✓</span><span><strong>Sin correa ni manos</strong><small>Nada que la tape.</small></span></li>
+              <li><span class="photo-check-mark" aria-hidden="true">✓</span><span><strong>Boca cerrada</strong><small>La lengua afuera se quiebra al imprimir.</small></span></li>
+            </ul>
+          </div>
+          <div class="upload-mode" id="upload-mode" role="group" aria-label="Cómo subir las fotos">
+            <button type="button" data-mode="libre" aria-pressed="true">Fotos sueltas</button>
+            <button type="button" data-mode="angulos" aria-pressed="false">Por ángulos</button>
+          </div>
+          <div class="angle-slots" id="angle-slots" hidden></div>
+          <label class="upload-zone" id="upload-zone" for="reference-images">
+            <input id="reference-images" type="file" accept="image/png,image/jpeg,image/webp" multiple>
+            <span class="upload-symbol">↑</span><strong class="con-mouse">Arrastra sus fotos aquí</strong><small class="con-mouse">o <u>selecciónalas desde tu dispositivo</u></small><strong class="con-dedo">Toca para elegir sus fotos</strong><small class="con-dedo">Desde tu galería o con la cámara</small><span class="upload-limit">JPG, PNG o WEBP · hasta 5 fotos · máximo 25 MB cada una</span>
+          </label>
+          <div class="file-list single" id="file-list"></div>
+          <p class="more-angles" id="more-angles" hidden></p>
+          <div class="field-block">
+            <label for="pet-name">¿Cómo se llama? <span>OPCIONAL</span></label>
+            <input id="pet-name" name="petName" type="text" maxlength="40" autocomplete="off" placeholder="Ej.: Luna">
+          </div>
+          <div class="field-block">
+            <label for="pet-species">¿Qué animal es?</label>
+            <select id="pet-species" name="species">
+              <option value="perro" selected>Perro</option>
+              <option value="gato">Gato</option>
+              <option value="otro">Otro animal</option>
+            </select>
+          </div>
+          <fieldset class="field-block field-full tail-field">
+            <legend>¿Se ve su cola en las fotos?</legend>
+            <div class="choice-row">
+              <label class="choice"><input type="radio" name="tail" value="visible"><span>Sí, se ve</span></label>
+              <label class="choice"><input type="radio" name="tail" value="oculta"><span>No se ve</span></label>
+              <label class="choice"><input type="radio" name="tail" value="sin-cola"><span>No tiene o es muy corta</span></label>
+            </div>
+            <div class="tail-describe" id="tail-describe" hidden>
+              <label for="tail-notes">¿Cómo es su cola?</label>
+              <input id="tail-notes" name="tailNotes" type="text" maxlength="120" autocomplete="off" placeholder="Ej.: larga y peluda, enroscada hacia arriba">
+              <small>Lo más seguro es sumar una foto donde se vea.</small>
+            </div>
+          </fieldset>
+          <div class="field-block field-full">
+            <label for="pet-notes">¿Algo más que no se nos puede pasar? <span>OPCIONAL</span></label>
+            <textarea id="pet-notes" name="notes" maxlength="300" rows="2" placeholder="Ej.: tiene una oreja doblada y una mancha blanca en el pecho."></textarea>
+          </div>
+          <label class="consent-row"><input id="consent" type="checkbox" required><span>Acepto que las fotos se envíen a un servicio externo de modelado 3D para crear la vista previa.</span></label>
+          <button class="button button-dark generate-model" id="generate-model" type="submit" disabled>Ver su figura en 3D <span>↗</span></button>
+          <p class="generate-hint" id="generate-hint"></p>
+          <div class="generation-state" id="generation-state" role="status" aria-live="polite"></div>
+          <div class="generation-progress" id="generation-progress" hidden>
+            <div class="wait-head"><strong id="progress-text">Enviando las fotos…</strong><span class="wait-time" id="progress-time" aria-label="Tiempo transcurrido">0:00</span></div>
+            <div class="progress-track"><span id="progress-fill"></span></div>
+            <ol class="wait-steps" id="wait-steps">
+              <li data-step="send"><i aria-hidden="true"></i>Enviando las fotos</li>
+              <li data-step="queue"><i aria-hidden="true"></i>Revisando sus fotos</li>
+              <li data-step="shape"><i aria-hidden="true"></i>Armando su forma</li>
+              <li data-step="detail"><i aria-hidden="true"></i>Afinando orejas, patas y cola</li>
+              <li data-step="viewer"><i aria-hidden="true"></i>Abriendo la figura en 3D</li>
+            </ol>
+            <p class="wait-expect">Suele tardar entre 3 y 5 minutos. No cierres esta pestaña: si cambias de aplicación, al volver seguirá avanzando.</p>
+            <div class="wait-tip"><span>Mientras esperas</span><p id="wait-tip"></p></div>
+          </div>
+          <p class="privacy-message"><span>◈</span> La vista previa es gratis y tarda unos minutos. Solo conservamos tus fotos si reservas la figura.</p>
+        </form>
+      </div>
+      <div class="studio-tab-panel view-panel" id="panel-view" role="tabpanel" aria-labelledby="tab-view" hidden>
+        <div class="view-layout">
+          <section class="result-panel" aria-label="Vista previa de la figura">
+            <div class="result-heading"><div><span class="eyebrow">Vista previa</span><h2 id="figure-title">Su figura</h2></div><span class="model-state" id="model-state"><i></i> SIN FIGURA TODAVÍA</span></div>
+            <div class="model-stage" id="model-stage">
+              <div class="model-placeholder" id="model-placeholder"><div class="placeholder-orbit"><span>F</span></div><strong>Su figura aparecerá aquí</strong><p>Sube sus fotos en el paso 01 para generar la vista previa.</p></div>
+              <model-viewer id="model-viewer" loading="eager" camera-controls touch-action="pan-y" auto-rotate auto-rotate-delay="2200" shadow-intensity="1.1" exposure="1" environment-image="neutral" interaction-prompt="none" alt="Vista previa en 3D de la figura de tu mascota"></model-viewer>
+              <div class="viewer-hint" id="viewer-hint" hidden><span>⟳</span> Arrastra para girar · rueda para acercar</div>
+            </div>
+            <div class="finish-toggle" role="group" aria-label="Acabado de la vista previa">
+              <button type="button" id="finish-white" aria-pressed="true" disabled>En blanco, como llega</button>
+              <button type="button" id="finish-color" aria-pressed="false" disabled>Con sus colores</button>
+            </div>
+            <p class="result-note" id="result-note">La figura se imprime en blanco. Los colores son una referencia para compararla con la foto; si la pides pintada, el taller los usa como guía.</p>
+          </section>
+          <aside class="edit-sidebar">
+            <form class="order-panel" id="order-form" novalidate>
+              <h2>Pide tu figura</h2>
+              <p>Elige el tamaño y déjanos tus datos. Te escribimos para confirmar el pago y el envío.</p>
+              <fieldset class="size-options" id="size-options"><legend>Tamaño</legend></fieldset>
+              <fieldset class="size-options finish-options" id="finish-options">
+                <legend>Acabado</legend>
+                <label class="size-option"><input type="radio" name="finish" value="blanco" checked><strong>En blanco</strong><small>Incluido · lista para pintar</small></label>
+                <label class="size-option" id="paint-option"><input type="radio" name="finish" value="pintada"><strong>Pintada</strong><small id="paint-price">por el taller</small></label>
+                <p class="finish-note" id="finish-note" hidden>La pintamos a mano, tomando como guía los colores de sus fotos. Puede tardar algunos días más; te confirmamos el plazo al escribirte.</p>
+              </fieldset>
+              <div class="extras-options" id="extras-options"></div>
+              <p class="order-total" id="order-total" hidden></p>
+              <div class="field-block">
+                <label for="order-name">Tu nombre</label>
+                <input id="order-name" type="text" maxlength="80" autocomplete="name" required>
+              </div>
+              <div class="field-block">
+                <label for="order-email">Tu correo</label>
+                <input id="order-email" type="email" maxlength="120" autocomplete="email" required>
+              </div>
+              <div class="field-block">
+                <label for="order-notes">Comentarios <span>OPCIONAL</span></label>
+                <textarea id="order-notes" maxlength="400" rows="2" placeholder="Ej.: es un regalo, la necesito antes del 20."></textarea>
+              </div>
+              <button class="button button-dark order-submit" id="order-submit" type="submit" disabled>Reservar mi figura <span>↗</span></button>
+              <p class="order-status" id="order-status" role="status" aria-live="polite">Primero genera la vista previa de tu mascota.</p>
+            </form>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="footer"><a class="wordmark" href="index.html"><span class="brand-symbol">F</span>FORMA<span class="wordmark-dot">.</span></a><span>Figuras 3D de mascotas, desde su foto.</span><a href="#top">VOLVER ARRIBA ↑</a><small>© 2026 FORMA · FIGURAS 3D DE MASCOTAS</small></footer>
+  <script src="js/demo-api.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/creator.js"></script>
+</body>
+</html>

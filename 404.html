@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f4ee">
+  <meta name="robots" content="noindex">
+  <title>Página no encontrada | FORMA</title>
+  <!-- Esta página se muestra en cualquier dirección que no exista, incluso en subcarpetas.
+       Por eso fija la base de los enlaces: la raíz del sitio local o la carpeta del sitio en GitHub Pages. -->
+  <script>
+    (function () {
+      var base = document.createElement('base');
+      base.href = location.pathname.indexOf('/fotoforma3d-demo/') === 0 ? '/fotoforma3d-demo/' : '/';
+      document.head.appendChild(base);
+      // La hoja se agrega aquí, después de la base, para que el navegador no la pida en la ruta equivocada.
+      var styles = document.createElement('link');
+      styles.rel = 'stylesheet';
+      styles.href = 'css/main.css';
+      document.head.appendChild(styles);
+    })();
+  </script>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400;1,9..144,500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body id="top" class="error-page">
+  <!-- Aplica el modo oscuro antes de dibujar la página, para que no se vea un destello claro al abrirla (js/main.js lo mantiene después). -->
+  <script>(function () { var saved = null; try { saved = localStorage.getItem('forma-theme'); } catch (e) {} if (saved === 'dark' || (saved !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches)) { document.body.classList.add('theme-dark'); var meta = document.querySelector('meta[name=theme-color]'); if (meta) meta.content = '#171b18'; } })();</script>
+
+  <div class="topline"><span>FORMA · FIGURAS 3D DE MASCOTAS</span></div>
+  <header class="header">
+    <a class="wordmark" href="index.html" aria-label="FORMA, inicio"><span class="brand-symbol">F</span>FORMA<span class="wordmark-dot">.</span></a>
+    <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false">☰</button>
+    <nav class="nav" aria-label="Principal">
+      <a href="index.html#como-funciona">Cómo funciona</a>
+      <a href="index.html#precios">Tamaños y precios</a>
+      <a href="ingresar.html">Mi pedido</a>
+      <button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false"><span aria-hidden="true">◐</span><span id="theme-label">Modo oscuro</span></button>
+      <a href="crear.html" class="nav-cta">Crear mi figura <span>↗</span></a>
+    </nav>
+  </header>
+
+  <main class="error-main">
+    <div class="error-art pet-photo" aria-hidden="true"><svg viewBox="0 0 120 150">
+        <ellipse class="pet-base" cx="60" cy="141" rx="38" ry="6"/>
+        <ellipse class="pet-fill" cx="88" cy="127" rx="9" ry="5" transform="rotate(-25 88 127)"/>
+        <ellipse class="pet-fill" cx="44" cy="131" rx="13" ry="9"/>
+        <ellipse class="pet-fill" cx="76" cy="131" rx="13" ry="9"/>
+        <path class="pet-fill" d="M60 66c-17 0-27 15-27 37 0 17 9 30 27 30s27-13 27-30c0-22-10-37-27-37z"/>
+        <path class="pet-light" d="M60 70c-9 0-14 11-14 30 0 16 6 27 14 27s14-11 14-27c0-19-5-30-14-30z"/>
+        <ellipse class="pet-fill" cx="47" cy="95" rx="5.5" ry="11" transform="rotate(28 47 95)"/>
+        <ellipse class="pet-fill" cx="73" cy="95" rx="5.5" ry="11" transform="rotate(-28 73 95)"/>
+        <ellipse class="pet-light" cx="51" cy="104" rx="5" ry="4"/>
+        <ellipse class="pet-light" cx="69" cy="104" rx="5" ry="4"/>
+        <path class="pet-fill" d="M41 40 34 5l22 23zM79 40l7-35-22 23z"/>
+        <path class="pet-light" d="M43 33 39 14l12 13zM77 33l4-19-12 13z"/>
+        <circle class="pet-fill" cx="60" cy="47" r="22"/>
+        <path class="pet-light" d="M60 30c-3 0-4 6-4 12-6 2-11 8-11 15 0 7 7 12 15 12s15-5 15-12c0-7-5-13-11-15 0-6-1-12-4-12z"/>
+        <circle class="pet-dark" cx="50" cy="45" r="2.8"/>
+        <circle class="pet-dark" cx="70" cy="45" r="2.8"/>
+        <ellipse class="pet-dark" cx="60" cy="56" rx="4.2" ry="3"/>
+        <path class="pet-dark" d="M52 61q8 7 16 0q-2 6-8 6t-8-6z"/>
+        <ellipse class="pet-tongue" cx="60" cy="67" rx="4" ry="4.6"/>
+        <ellipse class="pet-light" cx="42" cy="137" rx="9" ry="4"/>
+        <ellipse class="pet-light" cx="78" cy="137" rx="9" ry="4"/>
+      </svg></div>
+    <div class="error-copy">
+      <span class="eyebrow">Error 404</span>
+      <h1>Esta página<br><em>salió a pasear.</em></h1>
+      <p>La dirección no existe o cambió. Puedes volver al inicio, crear la figura de tu mascota o revisar tu pedido.</p>
+      <div class="error-actions">
+        <a class="button button-dark" href="index.html">Ir al inicio <span>↗</span></a>
+        <a class="quiet-link" href="crear.html">Crear mi figura</a>
+        <a class="quiet-link" href="ingresar.html">Mi pedido</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer"><a class="wordmark" href="index.html"><span class="brand-symbol">F</span>FORMA<span class="wordmark-dot">.</span></a><span>Figuras 3D de mascotas, desde su foto.</span><a href="index.html">IR AL INICIO ↑</a><small>© 2026 FORMA · FIGURAS 3D DE MASCOTAS</small></footer>
+  <script>
+    // Igual que la hoja de estilos: se pide después de fijar la base.
+    document.body.appendChild(Object.assign(document.createElement('script'), { src: 'js/main.js' }));
+  </script>
+</body>
+</html>

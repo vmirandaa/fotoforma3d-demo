@@ -1,0 +1,32 @@
+{
+  "moneda": "CLP",
+  "tallas": [
+    { "id": "S", "nombre": "Talla S", "medida": "8 cm", "precio": 17990, "descripcion": "Pequeña, para el escritorio o el velador.", "pintada": 12990 },
+    { "id": "M", "nombre": "Talla M", "medida": "10 cm", "precio": 22990, "descripcion": "El tamaño equilibrado para una repisa.", "destacada": true, "pintada": 14990 },
+    { "id": "L", "nombre": "Talla L", "medida": "12 cm", "precio": 31990, "descripcion": "Más presencia y más detalle a la vista.", "pintada": 18990 },
+    { "id": "XL", "nombre": "Talla XL", "medida": "15 cm", "precio": 45990, "descripcion": "La pieza protagonista de la casa.", "pintada": 24990 }
+  ],
+  "pintada": {
+    "nombre": "Pintada por el taller",
+    "descripcion": "Pintada a mano, tomando como guía los colores de sus fotos."
+  },
+  "extras": {
+    "formatos": [
+      { "id": "figura", "nombre": "Figura", "detalle": "La figura sola", "precio": 0 },
+      { "id": "alcancia", "nombre": "Alcancía", "detalle": "Con ranura para monedas", "precio": 7990 },
+      { "id": "anfora", "nombre": "Ánfora", "detalle": "Con un espacio para guardar sus cenizas", "precio": 14990 },
+      { "id": "cuadro", "nombre": "Cuadro 3D", "detalle": "En relieve, dentro de un marco", "precio": 11990 }
+    ],
+    "estilos": [
+      { "id": "realista", "nombre": "Realista", "detalle": "Fiel a sus fotos", "precio": 0 },
+      { "id": "animado", "nombre": "Animado", "detalle": "Estilo caricatura, más tierno", "precio": 4990 }
+    ],
+    "bases": [
+      { "id": "sin-base", "nombre": "Sin base", "detalle": "La figura sola", "precio": 0 },
+      { "id": "base", "nombre": "Base sin nombre", "detalle": "Una base lisa", "precio": 3990 },
+      { "id": "base-nombre", "nombre": "Base con nombre", "detalle": "Con su nombre grabado", "precio": 5990, "conNombre": true }
+    ],
+    "cantidadMaxima": 10
+  },
+  "envio": "El envío se cotiza según tu comuna al confirmar el pedido."
+}

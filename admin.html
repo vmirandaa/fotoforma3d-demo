@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#f6f4ee">
+  <title>Reservas | FORMA</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400;1,9..144,500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.4.0/model-viewer.min.js"></script>
+</head>
+<body id="top" class="admin-page">
+  <!-- Aplica el modo oscuro antes de dibujar la página, para que no se vea un destello claro al abrirla (js/main.js lo mantiene después). -->
+  <script>(function () { var saved = null; try { saved = localStorage.getItem('forma-theme'); } catch (e) {} if (saved === 'dark' || (saved !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches)) { document.body.classList.add('theme-dark'); var meta = document.querySelector('meta[name=theme-color]'); if (meta) meta.content = '#171b18'; } })();</script>
+  <div class="topline"><span>FORMA · PANEL PRIVADO</span></div>
+  <header class="header">
+    <a class="wordmark" href="index.html" aria-label="FORMA, inicio"><span class="brand-symbol">F</span>FORMA<span class="wordmark-dot">.</span></a>
+    <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false">☰</button>
+    <nav class="nav" aria-label="Principal">
+      <button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false"><span aria-hidden="true">◐</span><span id="theme-label">Modo oscuro</span></button>
+      <button class="theme-toggle" id="admin-logout" type="button" hidden>Salir</button>
+    </nav>
+  </header>
+  <main class="admin-main">
+    <section class="admin-login" id="admin-login" hidden>
+      <span class="eyebrow">Panel privado</span>
+      <h1>Reservas</h1>
+      <p class="admin-message" id="login-message" role="status" aria-live="polite">Revisando tu sesión…</p>
+      <a class="button button-dark" href="ingresar.html#admin">Ingresar como administrador <span>↗</span></a>
+    </section>
+
+    <section class="admin-board" id="admin-board" hidden>
+      <div class="admin-heading">
+        <div><span class="eyebrow">Panel privado</span><h1>Reservas</h1></div>
+        <button class="button button-dark" id="admin-refresh" type="button">Actualizar <span>⟳</span></button>
+      </div>
+      <div class="admin-stats" id="admin-stats"></div>
+      <div class="admin-tools">
+        <div class="admin-filters" id="admin-filters" role="group" aria-label="Filtrar por estado"></div>
+        <label class="admin-search"><span class="visually-hidden">Buscar reservas</span><input id="admin-search" type="search" autocomplete="off" placeholder="Buscar por nombre, correo, código o mascota"></label>
+      </div>
+      <p class="admin-message" id="board-message" role="status" aria-live="polite"></p>
+      <p class="admin-count" id="admin-count"></p>
+      <div class="admin-orders" id="admin-orders"></div>
+    </section>
+  </main>
+
+  <dialog class="model-dialog" id="model-dialog" aria-labelledby="model-dialog-title">
+    <div class="model-dialog-head">
+      <div><span class="eyebrow">Modelo de la reserva</span><h2 id="model-dialog-title"></h2></div>
+      <button class="theme-toggle" id="model-close" type="button">Cerrar ✕</button>
+    </div>
+    <div class="model-dialog-stage">
+      <model-viewer id="admin-viewer" loading="eager" camera-controls touch-action="pan-y" shadow-intensity="1.1" exposure="1" environment-image="neutral" interaction-prompt="none" alt="Modelo 3D de la reserva"></model-viewer>
+      <p class="model-dialog-status" id="model-dialog-status" role="status" aria-live="polite"></p>
+      <div class="photo-strip model-photos" id="model-photos" aria-label="Fotos del cliente" hidden></div>
+    </div>
+    <div class="model-dialog-actions">
+      <div class="model-finish" role="group" aria-label="Acabado">
+        <button type="button" id="view-white" aria-pressed="true">En blanco, como se imprime</button>
+        <button type="button" id="view-color" aria-pressed="false">Con sus colores</button>
+      </div>
+      <button type="button" id="view-download">Descargar modelo ↓</button>
+    </div>
+  </dialog>
+
+  <dialog class="model-dialog photo-dialog" id="photo-dialog" aria-labelledby="photo-dialog-title">
+    <div class="model-dialog-head">
+      <div><span class="eyebrow">Foto del cliente</span><h2 id="photo-dialog-title"></h2></div>
+      <button class="theme-toggle" id="photo-close" type="button">Cerrar ✕</button>
+    </div>
+    <div class="photo-dialog-stage">
+      <button class="photo-step" id="photo-prev" type="button" aria-label="Foto anterior">←</button>
+      <img id="photo-image" alt="Foto enviada por el cliente">
+      <button class="photo-step" id="photo-next" type="button" aria-label="Foto siguiente">→</button>
+    </div>
+  </dialog>
+  <script src="js/demo-api.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
