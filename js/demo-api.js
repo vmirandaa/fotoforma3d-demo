@@ -81,7 +81,7 @@
     if (!task) return json(404, { error: 'No se encontró esta generación en el estudio.' });
     const elapsed = Date.now() - task.started;
     if (elapsed > 9000) return json(200, { status: 'done', modelReady: true });
-    return json(200, { status: elapsed > 4000 ? 'generating' : 'queued' });
+    return json(200, { status: elapsed > 4000 ? 'generating' : 'queued', progress: Math.round((elapsed / 9000) * 100) });
   }
   async function handleOrder(init) {
     const body = await bodyJson(init);
@@ -127,17 +127,18 @@
 
   async function route(path, method, init) {
     if (path === '/api/health') return json(200, { ready: true });
+    if (path === '/api/pass') return json(200, { pass: 'demo-' + Date.now() });
     if (method === 'POST' && path === '/api/generate') return handleGenerate(init);
     if (path.startsWith('/api/status/')) return handleStatus(decodeURIComponent(path.slice(12)));
     if (path.startsWith('/api/model/')) return realFetch(MODEL_URL);
     if (method === 'POST' && path === '/api/order') return handleOrder(init);
-    if (method === 'POST' && path === '/api/seguimiento') {
+    if (method === 'POST' && (path === '/api/tracking' || path === '/api/seguimiento')) {
       const order = await findTracked(init);
       if (!order) return notFound();
       const { code, createdAt, status, statusUpdatedAt, measure, finish, extrasText, quantity, price, petName, species, hasModel } = order;
       return json(200, { code, createdAt, status, statusUpdatedAt, measure, finish, extrasText, quantity, price, petName, species, hasModel });
     }
-    if (method === 'POST' && path === '/api/seguimiento/modelo') return (await findTracked(init)) ? realFetch(MODEL_URL) : notFound();
+    if (method === 'POST' && (path === '/api/tracking/model' || path === '/api/seguimiento/modelo')) return (await findTracked(init)) ? realFetch(MODEL_URL) : notFound();
     if (method === 'POST' && path === '/api/admin/login') {
       const body = await bodyJson(init);
       if (!body.user || !body.password) return json(401, { error: 'Usuario o clave incorrectos.' });

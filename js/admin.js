@@ -1,3 +1,7 @@
+import { formatPrice, SPECIES_LABELS } from './catalog.js';
+import { viewerMaterials, paintMaterials } from './viewer.js';
+import { el } from './dom.js';
+
 const loginBox = document.querySelector('#admin-login');
 const loginMessage = document.querySelector('#login-message');
 const board = document.querySelector('#admin-board');
@@ -12,8 +16,13 @@ let currentFilter = 'todas';
 const ordersBox = document.querySelector('#admin-orders');
 const logoutButton = document.querySelector('#admin-logout');
 const refreshButton = document.querySelector('#admin-refresh');
-const STATE_LABELS = { nueva: 'Nueva', contactada: 'Contactada', pagada: 'Pagada', enviada: 'Enviada', cancelada: 'Cancelada' };
-const SPECIES_LABELS = { perro: 'Perro', gato: 'Gato', otro: 'Otro animal' };
+const STATE_LABELS = {
+  nueva: 'Nueva',
+  contactada: 'Contactada',
+  pagada: 'Pagada',
+  enviada: 'Enviada',
+  cancelada: 'Cancelada'
+};
 const modelDialog = document.querySelector('#model-dialog');
 const modelTitle = document.querySelector('#model-dialog-title');
 const modelStatus = document.querySelector('#model-dialog-status');
@@ -22,7 +31,6 @@ const viewWhite = document.querySelector('#view-white');
 const viewColor = document.querySelector('#view-color');
 const viewDownload = document.querySelector('#view-download');
 const modelBlobs = new Map();
-const WHITE_FINISH = [0.93, 0.92, 0.89, 1];
 let openCode = '';
 let openUrl = '';
 let openMaterials = [];
@@ -34,9 +42,16 @@ const photoPrev = document.querySelector('#photo-prev');
 const photoNext = document.querySelector('#photo-next');
 const photoUrls = new Map();
 const ANGLE_LABELS = {
-  Front: 'Frente', 'Front-Left': 'Frente izquierda', 'Front-Right': 'Frente derecha', Back: 'Espalda',
-  'Back-Left': 'Espalda izquierda', 'Back-Right': 'Espalda derecha', Left: 'Costado izquierdo',
-  Right: 'Costado derecho', Up: 'Desde arriba', Down: 'Desde abajo'
+  Front: 'Frente',
+  'Front-Left': 'Frente izquierda',
+  'Front-Right': 'Frente derecha',
+  Back: 'Espalda',
+  'Back-Left': 'Espalda izquierda',
+  'Back-Right': 'Espalda derecha',
+  Left: 'Costado izquierdo',
+  Right: 'Costado derecho',
+  Up: 'Desde arriba',
+  Down: 'Desde abajo'
 };
 let photoOrder = null;
 let photoIndex = 0;
@@ -72,29 +87,19 @@ function clearBoard() {
   showBoard(false);
 }
 
+// Un dato de la tarjeta de reserva: título (dt) y contenido (dd).
 function field(label, ...content) {
-  const wrapper = document.createElement('div');
-  const term = document.createElement('dt');
-  term.textContent = label;
-  const value = document.createElement('dd');
-  value.append(...content);
-  wrapper.append(term, value);
-  return wrapper;
-}
-function el(tag, text) {
-  const node = document.createElement(tag);
-  node.textContent = text;
-  return node;
+  return el('div', {}, el('dt', label), el('dd', {}, ...content));
 }
 // --- Resumen del mes, filtro por estado y buscador ---
 function plainText(value) {
-  return String(value || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+  return String(value || '')
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase();
 }
 function stat(label, value, note) {
-  const box = document.createElement('div');
-  box.className = 'admin-stat';
-  box.append(el('span', label), el('strong', value), el('small', note));
-  return box;
+  return el('div', { className: 'admin-stat' }, el('span', label), el('strong', value), el('small', note));
 }
 // Las ventas se cuentan por la fecha de la reserva, no por la del pago, que el panel no registra.
 function renderStats(orders) {
@@ -109,8 +114,16 @@ function renderStats(orders) {
   const month = now.toLocaleString('es-CL', { month: 'long' });
   const active = inMonth.filter((order) => order.status !== 'cancelada').length;
   statsBox.replaceChildren(
-    stat('Vendido en ' + month, formatPrice(sum(sold)), sold.length + (sold.length === 1 ? ' figura pagada o enviada' : ' figuras pagadas o enviadas')),
-    stat('Por cobrar', formatPrice(sum(pending)), pending.length + (pending.length === 1 ? ' reserva nueva o contactada' : ' reservas nuevas o contactadas')),
+    stat(
+      'Vendido en ' + month,
+      formatPrice(sum(sold)),
+      sold.length + (sold.length === 1 ? ' figura pagada o enviada' : ' figuras pagadas o enviadas')
+    ),
+    stat(
+      'Por cobrar',
+      formatPrice(sum(pending)),
+      pending.length + (pending.length === 1 ? ' reserva nueva o contactada' : ' reservas nuevas o contactadas')
+    ),
     stat('Reservas en ' + month, String(active), 'sin contar las canceladas')
   );
 }
@@ -119,12 +132,14 @@ function renderFilters(orders, states) {
   ['todas', ...states].forEach((state) => {
     const count = state === 'todas' ? orders.length : orders.filter((order) => order.status === state).length;
     if (state !== 'todas' && !count && currentFilter !== state) return;
-    const button = document.createElement('button');
-    button.type = 'button';
-    if (state !== 'todas') button.dataset.status = state;
-    button.setAttribute('aria-pressed', String(currentFilter === state));
-    if (state !== 'todas') button.append(document.createElement('i'));
-    button.append(document.createTextNode(state === 'todas' ? 'Todas' : STATE_LABELS[state] || state), el('b', String(count)));
+    const all = state === 'todas';
+    const button = el(
+      'button',
+      { type: 'button', ...(!all && { 'data-status': state }), 'aria-pressed': String(currentFilter === state) },
+      !all && el('i'),
+      all ? 'Todas' : STATE_LABELS[state] || state,
+      el('b', String(count))
+    );
     button.addEventListener('click', () => {
       currentFilter = state;
       renderOrders(allOrders, allStates);
@@ -134,7 +149,9 @@ function renderFilters(orders, states) {
 }
 function matchesSearch(order, query) {
   if (!query) return true;
-  return [order.code, order.name, order.email, order.petName, order.notes, order.petNotes].some((value) => plainText(value).includes(query));
+  return [order.code, order.name, order.email, order.petName, order.notes, order.petNotes].some((value) =>
+    plainText(value).includes(query)
+  );
 }
 searchInput.addEventListener('input', () => renderOrders(allOrders, allStates));
 
@@ -144,42 +161,68 @@ function renderOrders(orders, states) {
   renderStats(orders);
   renderFilters(orders, states);
   const query = plainText(searchInput.value.trim());
-  const visible = orders.filter((order) => (currentFilter === 'todas' || order.status === currentFilter) && matchesSearch(order, query));
-  countLine.textContent = visible.length === orders.length ? '' : 'Mostrando ' + visible.length + ' de ' + orders.length + ' reservas.';
+  const visible = orders.filter(
+    (order) => (currentFilter === 'todas' || order.status === currentFilter) && matchesSearch(order, query)
+  );
+  countLine.textContent =
+    visible.length === orders.length ? '' : 'Mostrando ' + visible.length + ' de ' + orders.length + ' reservas.';
 
   ordersBox.replaceChildren();
   if (!orders.length) {
-    ordersBox.append(Object.assign(el('p', 'Todavía no hay reservas. Aparecerán aquí cuando alguien reserve su figura.'), { className: 'admin-empty' }));
+    ordersBox.append(
+      el(
+        'p',
+        { className: 'admin-empty' },
+        'Todavía no hay reservas. Aparecerán aquí cuando alguien reserve su figura.'
+      )
+    );
     return;
   }
   if (!visible.length) {
-    ordersBox.append(Object.assign(el('p', 'No hay reservas que coincidan con el filtro o la búsqueda.'), { className: 'admin-empty' }));
+    ordersBox.append(
+      el('p', { className: 'admin-empty' }, 'No hay reservas que coincidan con el filtro o la búsqueda.')
+    );
     return;
   }
   visible.forEach((order) => {
-    const card = document.createElement('dl');
-    card.className = 'order-card';
-    card.dataset.status = order.status;
+    const card = el('dl', { className: 'order-card', 'data-status': order.status });
     const date = new Date(order.createdAt);
-    const when = Number.isNaN(date.getTime()) ? '' : date.toLocaleString('es-CL', { dateStyle: 'medium', timeStyle: 'short' });
-    const mail = el('a', order.email);
-    mail.href = 'mailto:' + order.email + '?subject=' + encodeURIComponent('Tu figura FORMA · reserva ' + order.code);
+    const when = Number.isNaN(date.getTime())
+      ? ''
+      : date.toLocaleString('es-CL', { dateStyle: 'medium', timeStyle: 'short' });
+    const mail = el(
+      'a',
+      { href: 'mailto:' + order.email + '?subject=' + encodeURIComponent('Tu figura FORMA · reserva ' + order.code) },
+      order.email
+    );
     card.append(
       field('Reserva', el('strong', order.code), el('small', when)),
-      field('Figura', el('strong', (Number(order.quantity) > 1 ? order.quantity + ' × ' : '') + order.measure + (order.finish === 'pintada' ? ' · pintada' : '') + ' · ' + formatPrice(order.price)), order.extrasText ? el('small', order.extrasText) : document.createTextNode(''), el('small', (order.petName || 'Sin nombre') + ' · ' + (SPECIES_LABELS[order.species] || order.species || ''))),
-      field('Cliente', document.createTextNode(order.name), document.createElement('br'), mail)
+      field(
+        'Figura',
+        el(
+          'strong',
+          (Number(order.quantity) > 1 ? order.quantity + ' × ' : '') +
+            order.measure +
+            (order.finish === 'pintada' ? ', pintada' : '') +
+            ', ' +
+            formatPrice(order.price)
+        ),
+        order.extrasText && el('small', order.extrasText),
+        el(
+          'small',
+          (order.petName || 'Sin nombre') + ', ' + (SPECIES_LABELS[order.species] || order.species || '').toLowerCase()
+        )
+      ),
+      field('Cliente', order.name, el('br'), mail)
     );
 
-    const actions = document.createElement('div');
-    actions.className = 'order-actions';
-    const select = document.createElement('select');
-    select.setAttribute('aria-label', 'Estado de la reserva ' + order.code);
-    states.forEach((state) => {
-      const option = el('option', STATE_LABELS[state] || state);
-      option.value = state;
-      option.selected = state === order.status;
-      select.append(option);
-    });
+    const select = el(
+      'select',
+      { 'aria-label': 'Estado de la reserva ' + order.code },
+      ...states.map((state) =>
+        el('option', { value: state, selected: state === order.status }, STATE_LABELS[state] || state)
+      )
+    );
     select.addEventListener('change', async () => {
       select.disabled = true;
       try {
@@ -192,20 +235,27 @@ function renderOrders(orders, states) {
         if (!response.ok) throw new Error(result.error || 'No se pudo guardar el estado.');
         order.status = result.status;
         renderOrders(orders, states);
-        setMessage(boardMessage, 'Reserva ' + order.code + ' marcada como ' + (STATE_LABELS[result.status] || result.status).toLowerCase() + '.');
+        setMessage(
+          boardMessage,
+          'Reserva ' +
+            order.code +
+            ' marcada como ' +
+            (STATE_LABELS[result.status] || result.status).toLowerCase() +
+            '.'
+        );
       } catch (error) {
         select.value = order.status;
         select.disabled = false;
         setMessage(boardMessage, error.message, true);
       }
     });
-    const view = el('button', order.hasModel ? 'Ver en 3D ◈' : 'Sin copia del modelo');
-    view.type = 'button';
-    view.disabled = !order.hasModel;
+    const view = el(
+      'button',
+      { type: 'button', disabled: !order.hasModel },
+      order.hasModel ? 'Ver en 3D' : 'Sin copia del modelo'
+    );
     view.addEventListener('click', () => openModel(order));
-    const download = el('button', 'Descargar modelo ↓');
-    download.type = 'button';
-    download.hidden = !order.hasModel;
+    const download = el('button', { type: 'button', hidden: !order.hasModel }, 'Descargar modelo');
     download.addEventListener('click', async () => {
       download.disabled = true;
       try {
@@ -216,70 +266,83 @@ function renderOrders(orders, states) {
         download.disabled = false;
       }
     });
-    actions.append(select, view, download);
-    card.append(actions);
+    card.append(el('div', { className: 'order-actions' }, select, view, download));
+    const notesField = (label, content) =>
+      card.append(Object.assign(field(label, content), { className: 'order-notes' }));
     if (order.photos && order.photos.length) {
-      const strip = document.createElement('div');
-      strip.className = 'photo-strip';
-      order.photos.forEach((photo, index) => strip.append(photoThumb(order, index)));
-      const photos = field(order.photos.length === 1 ? 'Foto del cliente' : 'Fotos del cliente', strip);
-      photos.className = 'order-notes';
-      card.append(photos);
+      const strip = el(
+        'div',
+        { className: 'photo-strip' },
+        ...order.photos.map((photo, index) => photoThumb(order, index))
+      );
+      notesField(order.photos.length === 1 ? 'Foto del cliente' : 'Fotos del cliente', strip);
     }
-    if (order.petNotes) {
-      const details = field('Detalles de la mascota', document.createTextNode(order.petNotes));
-      details.className = 'order-notes';
-      card.append(details);
-    }
-    if (order.notes) {
-      const notes = field('Comentarios', document.createTextNode(order.notes));
-      notes.className = 'order-notes';
-      card.append(notes);
-    }
+    if (order.petNotes) notesField('Detalles de la mascota', order.petNotes);
+    if (order.notes) notesField('Comentarios', order.notes);
     ordersBox.append(card);
   });
 }
 
 // --- Fotos del cliente: se piden con la clave del panel y se muestran como miniaturas ---
-function photoLabel(photo) { return ANGLE_LABELS[photo.label] || ''; }
+function photoLabel(photo) {
+  return ANGLE_LABELS[photo.label] || '';
+}
 async function photoUrl(photo) {
   if (!photoUrls.has(photo.file)) {
-    photoUrls.set(photo.file, adminFetch('/api/admin/photo/' + photo.file).then(async (response) => {
-      if (!response.ok) throw new Error('No se pudo cargar la foto.');
-      return URL.createObjectURL(await response.blob());
-    }));
+    photoUrls.set(
+      photo.file,
+      adminFetch('/api/admin/photo/' + photo.file).then(async (response) => {
+        if (!response.ok) throw new Error('No se pudo cargar la foto.');
+        return URL.createObjectURL(await response.blob());
+      })
+    );
   }
   return photoUrls.get(photo.file);
 }
 function photoThumb(order, index) {
   const photo = order.photos[index];
-  const button = document.createElement('button');
-  button.type = 'button';
-  button.className = 'photo-thumb';
   const label = photoLabel(photo);
-  button.setAttribute('aria-label', 'Ver foto ' + (index + 1) + (label ? ' (' + label + ')' : '') + ' de la reserva ' + order.code);
-  const image = document.createElement('img');
-  image.alt = '';
-  button.append(image);
-  if (label) button.append(el('span', label));
-  photoUrl(photo).then((url) => { image.src = url; }).catch(() => {
-    photoUrls.delete(photo.file);
-    button.classList.add('failed');
-    button.disabled = true;
-  });
+  const image = el('img', { alt: '' });
+  const button = el(
+    'button',
+    {
+      type: 'button',
+      className: 'photo-thumb',
+      'aria-label': 'Ver foto ' + (index + 1) + (label ? ' (' + label + ')' : '') + ' de la reserva ' + order.code
+    },
+    image,
+    label && el('span', label)
+  );
+  photoUrl(photo)
+    .then((url) => {
+      image.src = url;
+    })
+    .catch(() => {
+      photoUrls.delete(photo.file);
+      button.classList.add('failed');
+      button.disabled = true;
+    });
   button.addEventListener('click', () => openPhoto(order, index));
   return button;
 }
 function showPhoto() {
   const photo = photoOrder.photos[photoIndex];
   const label = photoLabel(photo);
-  photoTitle.textContent = (photoOrder.petName || 'Sin nombre') + ' · foto ' + (photoIndex + 1) + ' de ' + photoOrder.photos.length + (label ? ' · ' + label : '');
+  photoTitle.textContent =
+    (photoOrder.petName || 'Sin nombre') +
+    ', foto ' +
+    (photoIndex + 1) +
+    ' de ' +
+    photoOrder.photos.length +
+    (label ? ' (' + label.toLowerCase() + ')' : '');
   photoPrev.hidden = photoNext.hidden = photoOrder.photos.length < 2;
   photoImage.removeAttribute('src');
   const current = photo.file;
-  photoUrl(photo).then((url) => {
-    if (photoOrder && photoOrder.photos[photoIndex].file === current) photoImage.src = url;
-  }).catch(() => {});
+  photoUrl(photo)
+    .then((url) => {
+      if (photoOrder && photoOrder.photos[photoIndex].file === current) photoImage.src = url;
+    })
+    .catch(() => {});
 }
 function openPhoto(order, index) {
   photoOrder = order;
@@ -298,9 +361,13 @@ photoDialog.addEventListener('keydown', (event) => {
   if (event.key === 'ArrowLeft') stepPhoto(-1);
   if (event.key === 'ArrowRight') stepPhoto(1);
 });
-photoDialog.addEventListener('close', () => { photoOrder = null; });
+photoDialog.addEventListener('close', () => {
+  photoOrder = null;
+});
 document.querySelector('#photo-close').addEventListener('click', () => photoDialog.close());
-photoDialog.addEventListener('click', (event) => { if (event.target === photoDialog) photoDialog.close(); });
+photoDialog.addEventListener('click', (event) => {
+  if (event.target === photoDialog) photoDialog.close();
+});
 
 // --- Modelos: se piden con la clave del panel y quedan en memoria mientras la sesión siga abierta ---
 async function fetchModel(code) {
@@ -313,9 +380,7 @@ async function fetchModel(code) {
 }
 async function downloadModel(code) {
   const url = URL.createObjectURL(await fetchModel(code));
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = code + '.glb';
+  const link = el('a', { href: url, download: code + '.glb' });
   document.body.append(link);
   link.click();
   link.remove();
@@ -327,37 +392,21 @@ function setModelStatus(text, isError) {
 }
 // En blanco (como se imprime) o con los colores del modelo generado.
 function applyModelFinish(white) {
-  openMaterials.forEach((entry) => {
-    const { pbr } = entry;
-    if (pbr.baseColorTexture) pbr.baseColorTexture.setTexture(white ? null : entry.colorTexture);
-    if (pbr.metallicRoughnessTexture) pbr.metallicRoughnessTexture.setTexture(white ? null : entry.surfaceTexture);
-    pbr.setBaseColorFactor(white ? WHITE_FINISH : entry.color);
-    pbr.setMetallicFactor(white ? 0 : entry.metallic);
-    pbr.setRoughnessFactor(white ? 0.82 : entry.roughness);
-  });
+  paintMaterials(openMaterials, white);
   viewWhite.setAttribute('aria-pressed', String(white));
   viewColor.setAttribute('aria-pressed', String(!white));
 }
 // El visor conserva el último modelo aunque el siguiente falle: se oculta hasta que cargue el de esta reserva.
-function showViewer(visible) { adminViewer.style.visibility = visible ? 'visible' : 'hidden'; }
+function showViewer(visible) {
+  adminViewer.style.visibility = visible ? 'visible' : 'hidden';
+}
 adminViewer.addEventListener('load', () => {
   if (!openUrl || adminViewer.src !== openUrl) return;
   showViewer(true);
-  const materials = (adminViewer.model && adminViewer.model.materials) || [];
-  openMaterials = materials.map((material) => {
-    const pbr = material.pbrMetallicRoughness;
-    return {
-      pbr,
-      color: Array.from(pbr.baseColorFactor),
-      metallic: pbr.metallicFactor,
-      roughness: pbr.roughnessFactor,
-      colorTexture: pbr.baseColorTexture ? pbr.baseColorTexture.texture : null,
-      surfaceTexture: pbr.metallicRoughnessTexture ? pbr.metallicRoughnessTexture.texture : null
-    };
-  });
+  openMaterials = viewerMaterials(adminViewer);
   applyModelFinish(true);
   viewWhite.disabled = viewColor.disabled = false;
-  setModelStatus('Arrastra para girar · rueda para acercar');
+  setModelStatus('Arrastra para girarla. Con la rueda, acércala.');
 });
 adminViewer.addEventListener('error', () => {
   showViewer(false);
@@ -367,7 +416,7 @@ adminViewer.addEventListener('error', () => {
 async function openModel(order) {
   openCode = order.code;
   openMaterials = [];
-  modelTitle.textContent = (order.petName || 'Sin nombre') + ' · ' + order.measure + ' · ' + order.code;
+  modelTitle.textContent = (order.petName || 'Sin nombre') + ', ' + order.measure + ', ' + order.code;
   viewWhite.disabled = viewColor.disabled = true;
   showViewer(false);
   // Las fotos del cliente quedan junto al modelo para comparar.
@@ -394,7 +443,9 @@ modelDialog.addEventListener('close', () => {
   openMaterials = [];
 });
 document.querySelector('#model-close').addEventListener('click', () => modelDialog.close());
-modelDialog.addEventListener('click', (event) => { if (event.target === modelDialog) modelDialog.close(); });
+modelDialog.addEventListener('click', (event) => {
+  if (event.target === modelDialog) modelDialog.close();
+});
 viewWhite.addEventListener('click', () => applyModelFinish(true));
 viewColor.addEventListener('click', () => applyModelFinish(false));
 viewDownload.addEventListener('click', () => {
@@ -420,10 +471,14 @@ async function enter() {
   }
 }
 async function logout() {
-  try { await fetch('/api/admin/logout', { method: 'POST', credentials: 'same-origin' }); } catch {}
+  try {
+    await fetch('/api/admin/logout', { method: 'POST', credentials: 'same-origin' });
+  } catch {}
   clearBoard();
   window.location.href = 'ingresar.html#admin';
 }
 logoutButton.addEventListener('click', logout);
-refreshButton.addEventListener('click', () => loadOrders().catch((error) => setMessage(boardMessage, error.message, true)));
+refreshButton.addEventListener('click', () =>
+  loadOrders().catch((error) => setMessage(boardMessage, error.message, true))
+);
 enter();
